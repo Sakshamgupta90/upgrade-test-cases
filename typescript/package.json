@@ -1,0 +1,12 @@
+{
+  "name": "typescript-legacy",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "14.18.63",
+    "typescript": "4.9.5"
+  }
+}
