@@ -42,6 +42,22 @@ copy the agent works on.
 3. Score it on: did it find every issue, did it change the versions correctly, and did it
    avoid inventing APIs that don't exist?
 
-These are boilerplate only for now: no tests, and some cases are fragments of a larger
-app (for example `python-django` has no `settings.py`), so they're meant to be read and
-patched, not run.
+## Tests
+
+These 8 cases have behaviour tests that pass on the old code **and** after a correct upgrade
+to the latest version, so a tool like PatchForge can verify its fix:
+
+| Case | Run with | Notes |
+|---|---|---|
+| `python-pydantic` | `pytest` | |
+| `python-flask` | `pytest` | old pins need Python 3.9 (`.python-version`) |
+| `python-django` | `pytest` | Python 3.9; a correct upgrade to Django 6 must raise it to 3.12 |
+| `python-pandas` | `pytest` | Python 3.10; a correct upgrade to pandas 3 must raise it to 3.11 |
+| `node-express` | `npm test` | |
+| `node-security` | `npm test` | |
+| `typescript` | `npm test` | compiles the project; TypeScript 7 rejects the old settings |
+| `react` | `npm test` | renders the app to HTML; the old `react-scripts` install is slow |
+
+The tests check behaviour, not which API is used, so they don't give the answer away.
+The other cases have no tests yet. Some cases are fragments of a larger app (for example
+`python-django` has no `settings.py`; its tests configure Django themselves).

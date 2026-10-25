@@ -21,20 +21,11 @@ export function settingNames<T>(obj: T): string[] {
   return names;
 }
 
-function logged(target: any, key: string, descriptor: PropertyDescriptor) {
-  const original = descriptor.value;
-  descriptor.value = function (...args: any[]) {
-    console.log(`${key}(${args.join(", ")})`);
-    return original.apply(this, args);
-  };
-  return descriptor;
-}
-
 export class SettingsStore extends EventEmitter {
   private values: { [key: string]: unknown } = { ...settings };
 
-  @logged
   set(name: string, value: unknown) {
+    console.log(`set(${name}, ${value})`);
     this.values[name] = value;
     this.emit("change", name, value);
   }

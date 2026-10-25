@@ -44,4 +44,8 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(3001, () => console.log('Listening on http://localhost:3001'));
+if (require.main === module) {
+  server.listen(3001, () => console.log('Listening on http://localhost:3001'));
+}
+
+module.exports = { server, buildSettings, renderGreeting, fetchAvatar };
