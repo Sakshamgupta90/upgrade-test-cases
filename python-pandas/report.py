@@ -11,21 +11,21 @@ SALES = [
 def build_report(rows):
     df = pd.DataFrame([rows[0]])
     for row in rows[1:]:
-        df = df.append(row, ignore_index=True)
+        df = pd.concat([df, pd.DataFrame([row])], ignore_index=True)
     df["revenue"] = df["units"] * df["price"]
     return df
 
 
 def summary_by_region(df):
-    return df.groupby("region").mean()
+    return df.groupby("region").mean(numeric_only=True)
 
 
 def column_types(df):
-    return {name: str(col.dtype) for name, col in df.iteritems()}
+    return {name: str(col.dtype) for name, col in df.items()}
 
 
 def save(df, path):
-    df.to_csv(path, index=False, line_terminator="\n")
+    df.to_csv(path, index=False, lineterminator="\n")
 
 
 if __name__ == "__main__":
