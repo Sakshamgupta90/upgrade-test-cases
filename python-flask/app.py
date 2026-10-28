@@ -1,11 +1,14 @@
 import io
 from datetime import date
 
-from flask import Flask, Markup, jsonify, request, send_file
-from flask.json import JSONEncoder
+from flask import Flask, jsonify, request, send_file
+from flask.json.provider import DefaultJSONProvider
+from markupsafe import Markup
 
 
-class CustomJSONEncoder(JSONEncoder):
+class CustomJSONProvider(DefaultJSONProvider):
+    sort_keys = False
+
     def default(self, obj):
         if isinstance(obj, date):
             return obj.isoformat()
@@ -13,16 +16,17 @@ class CustomJSONEncoder(JSONEncoder):
 
 
 app = Flask(__name__)
-app.json_encoder = CustomJSONEncoder
-app.config["JSON_SORT_KEYS"] = False
+app.json = CustomJSONProvider(app)
 
 ITEMS = {}
 
 
-@app.before_first_request
 def seed_items():
     ITEMS["1"] = {"name": "Widget", "added": date(2021, 5, 1)}
     ITEMS["2"] = {"name": "Gadget", "added": date(2021, 6, 12)}
+
+
+seed_items()
 
 
 @app.route("/items")
@@ -43,7 +47,7 @@ def export_items():
         io.BytesIO(rows.encode()),
         mimetype="text/csv",
         as_attachment=True,
-        attachment_filename="items.csv",
+        download_name="items.csv",
     )
 
 
